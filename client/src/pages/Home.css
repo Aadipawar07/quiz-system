@@ -1,0 +1,131 @@
+.home {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.home-container {
+  background: white;
+  padding: 60px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.home-title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.home-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px 30px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+
+.status-card.connected {
+  background: #e8f5e9;
+  border: 2px solid #4caf50;
+}
+
+.status-card.disconnected {
+  background: #ffebee;
+  border: 2px solid #f44336;
+}
+
+.status-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-card.connected .status-indicator {
+  background: #4caf50;
+}
+
+.status-card.disconnected .status-indicator {
+  background: #f44336;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.status-label {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.status-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.info-section {
+  text-align: left;
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.info-section h2 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.info-section ul {
+  list-style: none;
+}
+
+.info-section li {
+  padding: 8px 0;
+  color: #555;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-section li:last-child {
+  border-bottom: none;
+}
+
+.info-section code {
+  background: #e3e8ee;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.9rem;
+  color: #667eea;
+}

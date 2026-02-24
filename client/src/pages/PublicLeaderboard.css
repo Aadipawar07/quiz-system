@@ -1,0 +1,139 @@
+/* ── Public Leaderboard — designed for projector display ───────── */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { background: #0f172a; }
+
+.lb-page {
+  min-height: 100vh;
+  background: #0f172a;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.lb-header {
+  text-align: center;
+  padding: 36px 24px 20px;
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  border-bottom: 2px solid #4f46e5;
+}
+
+.lb-title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+.lb-round-name {
+  margin-top: 8px;
+  font-size: 1.25rem;
+  color: #a5b4fc;
+  font-weight: 600;
+}
+
+.lb-updated {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* ── Main ────────────────────────────────────────────────────────── */
+.lb-main {
+  flex: 1;
+  padding: 32px 24px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.lb-message {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #94a3b8;
+  margin-top: 80px;
+}
+
+/* ── Table ───────────────────────────────────────────────────────── */
+.lb-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1.5px solid #1e293b;
+}
+
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.1rem;
+}
+
+.lb-table thead tr {
+  background: #1e293b;
+}
+
+.lb-table th {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.lb-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #1e293b;
+  vertical-align: middle;
+}
+
+.lb-table tbody tr {
+  background: #111827;
+  transition: background 0.15s;
+}
+
+.lb-table tbody tr:hover {
+  background: #1e293b;
+}
+
+/* ── Top 3 highlight ─────────────────────────────────────────────── */
+.lb-top-1 { background: #422006 !important; }
+.lb-top-2 { background: #1a1a2c !important; }
+.lb-top-3 { background: #1c1a16 !important; }
+
+.lb-top-1 td { border-bottom-color: #92400e; }
+.lb-top-2 td { border-bottom-color: #334155; }
+.lb-top-3 td { border-bottom-color: #292524; }
+
+/* ── Cell styles ─────────────────────────────────────────────────── */
+.lb-rank {
+  font-size: 1.4rem;
+  font-weight: 800;
+  width: 70px;
+  color: #f8fafc;
+}
+
+.lb-name {
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: #f1f5f9;
+}
+
+.lb-roll {
+  color: #94a3b8;
+  font-size: 1rem;
+}
+
+.lb-score {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #4ade80;
+}
+
+.lb-time {
+  color: #7dd3fc;
+  font-size: 1rem;
+}
