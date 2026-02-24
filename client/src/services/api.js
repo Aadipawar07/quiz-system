@@ -25,20 +25,19 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    // Handle common errors here
     if (error.response) {
-      // Server responded with error status
-      console.error('API Error:', error.response.data);
+      console.error(`API Error ${error.response.status}:`, error.response.data);
+      // Auto-logout on expired/invalid token
+      if (error.response.status === 401) {
+        localStorage.removeItem('adminToken');
+        window.location.href = '/admin-login';
+      }
     } else if (error.request) {
-      // Request made but no response
-      console.error('Network Error:', error.message);
+      console.error('Network Error (no response):', error.message);
     } else {
-      // Error in request setup
-      console.error('Request Error:', error.message);
+      console.error('Request setup error:', error.message);
     }
     return Promise.reject(error);
   }

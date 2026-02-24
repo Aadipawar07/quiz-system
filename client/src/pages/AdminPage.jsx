@@ -98,7 +98,9 @@ function AdminPage() {
       const res = await api.get('/admin/rounds');
       setRounds(res.data);
     } catch (err) {
-      setRoundsError(err.response?.data?.message || 'Failed to load rounds.');
+      const status = err.response?.status;
+      const msg = err.response?.data?.message;
+      setRoundsError(msg ? `Error ${status}: ${msg}` : 'Cannot reach server. Check your connection.');
     } finally {
       setRoundsLoading(false);
     }
@@ -197,7 +199,9 @@ function AdminPage() {
       const res = await api.get('/admin/results');
       setResults(res.data);
     } catch (err) {
-      setResultsError(err.response?.data?.message || 'Failed to load results.');
+      const status = err.response?.status;
+      const msg = err.response?.data?.message;
+      setResultsError(msg ? `Error ${status}: ${msg}` : 'Cannot reach server. Check your connection.');
     } finally {
       setResultsLoading(false);
     }
