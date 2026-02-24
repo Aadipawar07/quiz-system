@@ -17,22 +17,25 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-
     if (
       origin.includes('localhost') ||
       origin.includes('vercel.app')
     ) {
       return callback(null, true);
     }
-
     return callback(new Error('Not allowed by CORS'));
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-}));
+};
+
+// Handle OPTIONS preflight for all routes
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

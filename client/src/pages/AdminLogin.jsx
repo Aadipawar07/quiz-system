@@ -26,7 +26,11 @@ function AdminLogin() {
       localStorage.setItem('adminToken', response.data.token);
       navigate('/admin', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      if (!err.response) {
+        setError('Cannot reach server. It may be waking up (free tier) — please wait 30s and try again.');
+      } else {
+        setError(err.response.data?.message || 'Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -70,7 +74,7 @@ function AdminLogin() {
           {error && <div className="login-error">⚠️ {error}</div>}
 
           <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? '⏳ Connecting...' : 'Login'}
           </button>
         </form>
       </div>
