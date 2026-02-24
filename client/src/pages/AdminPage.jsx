@@ -667,7 +667,7 @@ function AdminPage() {
           })}
         </section>
 
-        {/* ══ SECTION C — Add Question ══ */}}
+        {/* ══ SECTION C — Add Question ══ */}
         <section className="admin-section">
           <h2 className="section-title">➕ Add New Question</h2>
           <form className="question-form" onSubmit={handleSubmit} noValidate>
