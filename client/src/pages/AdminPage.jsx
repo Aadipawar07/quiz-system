@@ -72,6 +72,18 @@ function AdminPage() {
   const [resultsError, setResultsError]       = useState('');
 
   // ── Live stats ──────────────────────────────────────────────────────────────
+  // Retry helper: retries up to `retries` times on network errors (no err.response)
+  const fetchWithRetry = async (fn, retries = 3, delayMs = 5000) => {
+    for (let i = 1; i <= retries; i++) {
+      try {
+        return await fn();
+      } catch (err) {
+        if (err.response || i === retries) throw err; // server error or last attempt
+        await new Promise((r) => setTimeout(r, delayMs));
+      }
+    }
+  };
+
   const fetchLiveStats = async () => {
     try {
       const res = await api.get('/admin/live-stats');
@@ -95,7 +107,7 @@ function AdminPage() {
     setRoundsLoading(true);
     setRoundsError('');
     try {
-      const res = await api.get('/admin/rounds');
+      const res = await fetchWithRetry(() => api.get('/admin/rounds'));
       setRounds(res.data);
     } catch (err) {
       const status = err.response?.status;
@@ -196,7 +208,7 @@ function AdminPage() {
     setResultsLoading(true);
     setResultsError('');
     try {
-      const res = await api.get('/admin/results');
+      const res = await fetchWithRetry(() => api.get('/admin/results'));
       setResults(res.data);
     } catch (err) {
       const status = err.response?.status;
@@ -432,7 +444,12 @@ function AdminPage() {
               {roundsLoading ? 'Loading...' : '↻ Refresh'}
             </button>
           </div>
-          {roundsError && <div className="msg msg-error">{roundsError}</div>}
+          {roundsError && (
+            <div className="msg msg-error">
+              {roundsError}
+              <button className="btn-retry-inline" onClick={fetchRounds}>Retry</button>
+            </div>
+          )}
           {roundsLoading ? (
             <p className="results-loading">Fetching rounds...</p>
           ) : rounds.length === 0 ? (
@@ -748,7 +765,12 @@ function AdminPage() {
               </button>
             </div>
           </div>
-          {resultsError && <div className="msg msg-error">{resultsError}</div>}
+          {resultsError && (
+            <div className="msg msg-error">
+              {resultsError}
+              <button className="btn-retry-inline" onClick={fetchResults}>Retry</button>
+            </div>
+          )}
           {resultsLoading ? (
             <p className="results-loading">Fetching results...</p>
           ) : results.length === 0 ? (

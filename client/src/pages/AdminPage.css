@@ -159,7 +159,26 @@
   background: #fef2f2;
   border: 1px solid #fca5a5;
   color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
+
+.btn-retry-inline {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-retry-inline:hover { background: #b91c1c; }
 
 .msg-success {
   background: #f0fdf4;
