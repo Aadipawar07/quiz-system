@@ -17,7 +17,7 @@ export const getPublicLeaderboard = async (req, res) => {
         terminated: false,
         submitTime: { $ne: null },
       },
-      { name: 1, rollNo: 1, score: 1, timeTaken: 1, _id: 0 }
+      { name: 1, tokenNo: 1, score: 1, timeTaken: 1, _id: 0 }
     )
       .sort({ score: -1, timeTaken: 1 })
       .lean();

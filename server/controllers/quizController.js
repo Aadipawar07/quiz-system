@@ -65,13 +65,13 @@ export const getQuestions = async (req, res) => {
 // POST /api/quiz/start
 export const startQuiz = async (req, res) => {
   try {
-    const { name, rollNo } = req.body;
+    const { name, tokenNo } = req.body;
 
     if (!name || name.trim() === '') {
       return res.status(400).json({ message: 'Student name is required' });
     }
-    if (!rollNo || rollNo.trim() === '') {
-      return res.status(400).json({ message: 'Roll number is required' });
+    if (!tokenNo || tokenNo.trim() === '') {
+      return res.status(400).json({ message: 'Token number is required' });
     }
 
     // Attach the currently published round to this attempt
@@ -80,7 +80,7 @@ export const startQuiz = async (req, res) => {
     // Block re-entry only if an active (non-reset) attempt exists for this round
     if (activeRound) {
       const existingForRound = await StudentAttempt.findOne({
-        rollNo:  rollNo.trim(),
+        tokenNo: tokenNo.trim(),
         roundId: activeRound._id,
         isReset: false,
       });
@@ -91,7 +91,7 @@ export const startQuiz = async (req, res) => {
 
     const attempt = new StudentAttempt({
       name: name.trim(),
-      rollNo: rollNo.trim(),
+      tokenNo: tokenNo.trim(),
       roundId: activeRound ? activeRound._id : undefined,
       answers: [],
       attempted: 0,
@@ -120,7 +120,7 @@ export const submitQuiz = async (req, res) => {
   try {
     const {
       name,
-      rollNo,
+      tokenNo,
       answers,
       terminated    = false,
       violationCount = 0
@@ -130,17 +130,17 @@ export const submitQuiz = async (req, res) => {
     if (!name || name.trim() === '') {
       return res.status(400).json({ message: 'Student name is required' });
     }
-    if (!rollNo || rollNo.trim() === '') {
-      return res.status(400).json({ message: 'Roll number is required' });
+    if (!tokenNo || tokenNo.trim() === '') {
+      return res.status(400).json({ message: 'Token number is required' });
     }
     if (!Array.isArray(answers)) {
       return res.status(400).json({ message: 'answers must be an array' });
     }
 
     // --- Find the existing attempt created by startQuiz ---
-    const existingAttempt = await StudentAttempt.findOne({ rollNo: rollNo.trim(), isReset: false });
+    const existingAttempt = await StudentAttempt.findOne({ tokenNo: tokenNo.trim(), isReset: false });
     if (!existingAttempt) {
-      return res.status(404).json({ message: 'No active quiz session found for this roll number' });
+      return res.status(404).json({ message: 'No active quiz session found for this token number' });
     }
     if (existingAttempt.submitTime) {
       return res.status(400).json({ message: 'This quiz has already been submitted' });

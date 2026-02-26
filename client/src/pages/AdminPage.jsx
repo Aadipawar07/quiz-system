@@ -281,10 +281,10 @@ function AdminPage() {
     }
   };
   // ── Participants handler ───────────────────────────────────────────
-  const handleResetAttempt = async (rollNo, roundId) => {
-    if (!window.confirm(`Reset attempt for ${rollNo}? The student will be able to re-enter the quiz.`)) return;
+  const handleResetAttempt = async (tokenNo, roundId) => {
+    if (!window.confirm(`Reset attempt for ${tokenNo}? The student will be able to re-enter the quiz.`)) return;
     try {
-      await api.post('/admin/reset-attempt', { rollNo, roundId });
+      await api.post('/admin/reset-attempt', { tokenNo, roundId });
       // Refresh participants list
       const res = await api.get(`/admin/participants/${roundId}`);
       setParticipantState((prev) => ({ ...prev, [roundId]: { ...prev[roundId], data: res.data } }));
@@ -559,7 +559,7 @@ function AdminPage() {
                     <table className="results-table">
                       <thead>
                         <tr>
-                          <th>Rank</th><th>Name</th><th>Roll No</th>
+                          <th>Rank</th><th>Name</th><th>Token No</th>
                           <th>Score</th><th>Correct</th><th>Attempted</th><th>Time (s)</th>
                         </tr>
                       </thead>
@@ -568,7 +568,7 @@ function AdminPage() {
                           <tr key={entry._id}>
                             <td><strong>#{idx + 1}</strong></td>
                             <td>{entry.name}</td>
-                            <td>{entry.rollNo}</td>
+                            <td>{entry.tokenNo}</td>
                             <td><strong>{entry.score}</strong></td>
                             <td>{entry.correct}</td>
                             <td>{entry.attempted}</td>
@@ -599,7 +599,7 @@ function AdminPage() {
                     <table className="results-table">
                       <thead>
                         <tr>
-                          <th>#</th><th>Name</th><th>Roll No</th><th>Attempted</th>
+                          <th>#</th><th>Name</th><th>Token No</th><th>Attempted</th>
                           <th>Score</th><th>Terminated</th><th>Violations</th>
                           <th>Start Time</th><th>Submit Time</th><th>Action</th>
                         </tr>
@@ -609,7 +609,7 @@ function AdminPage() {
                           <tr key={p._id}>
                             <td>{idx + 1}</td>
                             <td>{p.name}</td>
-                            <td>{p.rollNo}</td>
+                            <td>{p.tokenNo}</td>
                             <td>{p.attempted}</td>
                             <td><strong>{p.score}</strong></td>
                             <td>
@@ -623,7 +623,7 @@ function AdminPage() {
                             <td>
                               <button
                                 className="btn-delete-q"
-                                onClick={() => handleResetAttempt(p.rollNo, r._id)}
+                                onClick={() => handleResetAttempt(p.tokenNo, r._id)}
                               >Reset</button>
                             </td>
                           </tr>
@@ -780,7 +780,7 @@ function AdminPage() {
               <table className="results-table">
                 <thead>
                   <tr>
-                    <th>#</th><th>Name</th><th>Roll No</th>
+                    <th>#</th><th>Name</th><th>Token No</th>
                     <th>Attempted</th><th>Correct</th><th>Score</th><th>Terminated</th>
                   </tr>
                 </thead>
@@ -789,7 +789,7 @@ function AdminPage() {
                     <tr key={r._id}>
                       <td>{idx + 1}</td>
                       <td>{r.name}</td>
-                      <td>{r.rollNo}</td>
+                      <td>{r.tokenNo}</td>
                       <td>{r.attempted}</td>
                       <td>{r.correct}</td>
                       <td><strong>{r.score}</strong></td>

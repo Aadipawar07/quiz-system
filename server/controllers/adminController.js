@@ -107,7 +107,7 @@ export const exportResults = async (req, res) => {
     const data = attempts.map((a, index) => ({
       'S.No':       index + 1,
       'Name':       a.name,
-      'Roll No':    a.rollNo,
+      'Token No':   a.tokenNo,
       'Attempted':  a.attempted,
       'Correct':    a.correct,
       'Score':      a.score,
@@ -221,7 +221,7 @@ export const getLeaderboard = async (req, res) => {
 
     const attempts = await StudentAttempt.find(
       { roundId, terminated: false, isReset: false },
-      { name: 1, rollNo: 1, score: 1, correct: 1, attempted: 1, timeTaken: 1, submitTime: 1 }
+      { name: 1, tokenNo: 1, score: 1, correct: 1, attempted: 1, timeTaken: 1, submitTime: 1 }
     )
       .sort({ score: -1, timeTaken: 1, submitTime: 1 })
       .lean();
@@ -246,7 +246,7 @@ export const getParticipants = async (req, res) => {
     const participants = await StudentAttempt.find(
       { roundId, isReset: false },
       {
-        name: 1, rollNo: 1, attempted: 1, correct: 1, score: 1,
+        name: 1, tokenNo: 1, attempted: 1, correct: 1, score: 1,
         violationCount: 1, terminated: 1, startTime: 1, submitTime: 1
       }
     )
@@ -334,14 +334,14 @@ export const deleteRound = async (req, res) => {
 // POST /api/admin/reset-attempt
 export const resetAttempt = async (req, res) => {
   try {
-    const { rollNo, roundId } = req.body;
+    const { tokenNo, roundId } = req.body;
 
-    if (!rollNo || !roundId) {
-      return res.status(400).json({ message: 'rollNo and roundId are required' });
+    if (!tokenNo || !roundId) {
+      return res.status(400).json({ message: 'tokenNo and roundId are required' });
     }
 
     const attempt = await StudentAttempt.findOne({
-      rollNo: rollNo.trim(),
+      tokenNo: tokenNo.trim(),
       roundId,
       isReset: false,
     });

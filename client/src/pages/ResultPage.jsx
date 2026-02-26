@@ -29,7 +29,7 @@ function ResultPage() {
   const handleGoHome = () => {
     localStorage.removeItem('attemptId');
     localStorage.removeItem('studentName');
-    localStorage.removeItem('rollNo');
+    localStorage.removeItem('tokenNo');
     navigate('/', { replace: true });
   };
 

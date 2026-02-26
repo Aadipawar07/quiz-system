@@ -8,9 +8,9 @@ const studentAttemptSchema = new mongoose.Schema(
       trim: true
     },
 
-    rollNo: {
+    tokenNo: {
       type: String,
-      required: [true, 'Roll number is required'],
+      required: [true, 'Token number is required'],
       index: true
     },
 

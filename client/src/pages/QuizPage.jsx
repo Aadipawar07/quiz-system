@@ -76,7 +76,7 @@ function QuizPage() {
     }
 
     const name    = localStorage.getItem('studentName') || '';
-    const rollNo  = localStorage.getItem('rollNo')      || '';
+    const tokenNo = localStorage.getItem('tokenNo')     || '';
     const answers = Object.entries(selectedAnswersRef.current).map(
       ([questionId, selectedOption]) => ({ questionId, selectedOption })
     );
@@ -84,7 +84,7 @@ function QuizPage() {
     try {
       const response = await api.post('/quiz/submit', {
         name,
-        rollNo,
+        tokenNo,
         answers,
         terminated:     isTerminated,
         violationCount: violationCountRef.current
@@ -93,7 +93,7 @@ function QuizPage() {
       // Clear session keys
       localStorage.removeItem('attemptId');
       localStorage.removeItem('studentName');
-      localStorage.removeItem('rollNo');
+      localStorage.removeItem('tokenNo');
 
       navigate('/', { replace: true });
     } catch (err) {

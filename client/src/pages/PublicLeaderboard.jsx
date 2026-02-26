@@ -67,19 +67,19 @@ function PublicLeaderboard() {
                 <tr>
                   <th>Rank</th>
                   <th>Name</th>
-                  <th>Roll No</th>
+                  <th>Token No</th>
                   <th>Score</th>
                   <th>Time Taken</th>
                 </tr>
               </thead>
               <tbody>
                 {data.leaderboard.map((entry, idx) => (
-                  <tr key={entry.rollNo} className={idx < 3 ? `lb-top lb-top-${idx + 1}` : ''}>
+                  <tr key={entry.tokenNo} className={idx < 3 ? `lb-top lb-top-${idx + 1}` : ''}>
                     <td className="lb-rank">
                       {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : idx + 1}
                     </td>
                     <td className="lb-name">{entry.name}</td>
-                    <td className="lb-roll">{entry.rollNo}</td>
+                    <td className="lb-roll">{entry.tokenNo}</td>
                     <td className="lb-score">{entry.score}</td>
                     <td className="lb-time">{formatTime(entry.timeTaken)}</td>
                   </tr>

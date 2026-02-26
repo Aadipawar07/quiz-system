@@ -7,7 +7,7 @@ function EntryPage() {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
-  const [rollNo, setRollNo] = useState('');
+  const [tokenNo, setTokenNo] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,8 +16,8 @@ function EntryPage() {
       setError('Please enter your name.');
       return false;
     }
-    if (!rollNo.trim()) {
-      setError('Please enter your roll number.');
+    if (!tokenNo.trim()) {
+      setError('Please enter your token number.');
       return false;
     }
     return true;
@@ -33,13 +33,13 @@ function EntryPage() {
     try {
       const response = await api.post('/quiz/start', {
         name: name.trim(),
-        rollNo: rollNo.trim()
+        tokenNo: tokenNo.trim()
       });
 
       const { attemptId } = response.data;
       localStorage.setItem('attemptId', attemptId);
       localStorage.setItem('studentName', name.trim());
-      localStorage.setItem('rollNo', rollNo.trim());
+      localStorage.setItem('tokenNo', tokenNo.trim());
 
       navigate('/quiz');
     } catch (err) {
@@ -74,13 +74,13 @@ function EntryPage() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="rollNo">Roll Number</label>
+            <label htmlFor="tokenNo">Token Number</label>
             <input
-              id="rollNo"
+              id="tokenNo"
               type="text"
-              placeholder="Enter your roll number"
-              value={rollNo}
-              onChange={(e) => setRollNo(e.target.value)}
+              placeholder="Enter your token number"
+              value={tokenNo}
+              onChange={(e) => setTokenNo(e.target.value)}
               disabled={loading}
               autoComplete="off"
             />
