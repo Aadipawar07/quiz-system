@@ -32,6 +32,7 @@ function QuizPage() {
   const violationCountRef   = useRef(0);   // mirrors violationCount state
   const selectedAnswersRef  = useRef({});  // mirrors selectedAnswers state
   const lastViolationTime   = useRef(0);   // for debouncing rapid events
+  const isShowingAlert      = useRef(false); // prevent alert() blur from re-triggering
 
   // Keep refs in sync with state
   useEffect(() => { violationCountRef.current  = violationCount;  }, [violationCount]);
@@ -121,6 +122,7 @@ function QuizPage() {
   // violation counting, warning alerts, and auto-termination.
   const handleViolation = useCallback(() => {
     if (hasSubmitted.current) return;
+    if (isShowingAlert.current) return;
 
     // 1-second cooldown: blur + visibilitychange can fire simultaneously
     const now = Date.now();
@@ -132,20 +134,24 @@ function QuizPage() {
     setViolationCount(newCount);
 
     if (newCount >= MAX_VIOLATIONS) {
+      isShowingAlert.current = true;
       alert(
         '🚫 Quiz Terminated!\n\n' +
         'You switched tabs, minimized the window, or exited fullscreen too many times.'
       );
+      isShowingAlert.current = false;
       submitQuiz({ isTerminated: true });
       return;
     }
 
     const remaining = MAX_VIOLATIONS - newCount;
+    isShowingAlert.current = true;
     alert(
       `⚠️ Violation ${newCount} of ${MAX_VIOLATIONS - 1} detected!\n\n` +
       `Do not switch tabs, minimize the window, or exit fullscreen.\n\n` +
       `${remaining} more violation(s) will automatically terminate your quiz.`
     );
+    isShowingAlert.current = false;
   }, [submitQuiz]);
 
   // ── Request fullscreen when questions load ──────────────────────────────────

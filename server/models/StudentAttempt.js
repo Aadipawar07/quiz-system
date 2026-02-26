@@ -15,14 +15,8 @@ const studentAttemptSchema = new mongoose.Schema(
     },
 
     answers: {
-      type: [Number],
-      default: [],
-      validate: {
-        validator: function (val) {
-          return val.every((v) => v >= 0 && v <= 3 && Number.isInteger(v));
-        },
-        message: 'Each answer must be a valid option index between 0 and 3'
-      }
+      type: [String],
+      default: []
     },
 
     attempted: {
