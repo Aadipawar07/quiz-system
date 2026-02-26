@@ -90,24 +90,12 @@ function QuizPage() {
         violationCount: violationCountRef.current
       });
 
-      // Clear session keys — result page handles the redirect
+      // Clear session keys
       localStorage.removeItem('attemptId');
       localStorage.removeItem('studentName');
       localStorage.removeItem('rollNo');
 
-      navigate('/result', {
-        replace: true,
-        state: {
-          roundName:      response.data.roundName,
-          score:          response.data.score,
-          correct:        response.data.correct,
-          attempted:      response.data.attempted,
-          totalQuestions: response.data.totalQuestions,
-          percentage:     response.data.percentage,
-          timeTaken:      response.data.timeTaken,
-          terminated:     response.data.terminated,
-        },
-      });
+      navigate('/', { replace: true });
     } catch (err) {
       const message = err.response?.data?.message || 'Submission failed. Please try again.';
       alert(`Error: ${message}`);
