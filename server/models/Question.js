@@ -26,10 +26,8 @@ const questionSchema = new mongoose.Schema(
     },
 
     correctAnswer: {
-      type: Number,
-      required: [true, 'Correct answer index is required'],
-      min: [0, 'Correct answer index must be between 0 and 3'],
-      max: [3, 'Correct answer index must be between 0 and 3']
+      type: String,
+      required: true,
     },
 
     marks: {

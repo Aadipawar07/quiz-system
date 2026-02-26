@@ -201,9 +201,9 @@ function QuizPage() {
   }, [timeLeft, submitQuiz]);
 
   // â”€â”€ Handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const handleOptionSelect = (questionId, optionIndex) => {
+  const handleOptionSelect = (questionId, optionText) => {
     if (submitting) return;
-    setSelectedAnswers((prev) => ({ ...prev, [questionId]: optionIndex }));
+    setSelectedAnswers((prev) => ({ ...prev, [questionId]: optionText }));
   };
 
   const handlePrev = () => setCurrentIndex((i) => Math.max(i - 1, 0));
@@ -278,7 +278,7 @@ function QuizPage() {
 
           <div className="options-list" role="radiogroup">
             {currentQuestion.options.map((option, idx) => {
-              const isSelected = selectedAnswers[currentQuestion._id] === idx;
+              const isSelected = selectedAnswers[currentQuestion._id] === option;
               return (
                 <label
                   key={idx}
@@ -287,9 +287,9 @@ function QuizPage() {
                   <input
                     type="radio"
                     name={`question-${currentQuestion._id}`}
-                    value={idx}
+                    value={option}
                     checked={isSelected}
-                    onChange={() => handleOptionSelect(currentQuestion._id, idx)}
+                    onChange={() => handleOptionSelect(currentQuestion._id, option)}
                     disabled={submitting}
                   />
                   <span className="option-marker">{['A', 'B', 'C', 'D'][idx]}</span>

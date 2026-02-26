@@ -41,18 +41,13 @@ export const getQuestions = async (req, res) => {
     // 3️⃣ Fisher-Yates shuffle on full pool, then slice to totalQuestions
     const selectedQuestions = shuffleArray([...allQuestions]).slice(0, round.totalQuestions);
 
-    // 4️⃣ Shuffle options inside each question, tracking correct answer by text
-    const questionsForClient = selectedQuestions.map((q) => {
-      const originalCorrectText = q.options[q.correctAnswer];
-      const shuffledOptions     = shuffleArray([...q.options]);
-
-      return {
-        _id:          q._id,
-        questionText: q.questionText,
-        options:      shuffledOptions
-        // correctAnswer intentionally omitted — never sent to client
-      };
-    });
+    // 4️⃣ Return questions (options already shuffled at import time)
+    const questionsForClient = selectedQuestions.map((q) => ({
+      _id:          q._id,
+      questionText: q.questionText,
+      options:      q.options
+      // correctAnswer intentionally omitted — never sent to client
+    }));
 
     // 5️⃣ Return round metadata + questions
     return res.status(200).json({
@@ -157,6 +152,8 @@ export const submitQuiz = async (req, res) => {
     let score     = 0;
     const selectedOptions = [];
 
+    const normalize = (str) => String(str).trim().toLowerCase().replace(/\s+/g, ' ');
+
     if (answers.length > 0) {
       // Validate answer entries
       const invalidEntry = answers.find(
@@ -165,14 +162,12 @@ export const submitQuiz = async (req, res) => {
           !mongoose.Types.ObjectId.isValid(a.questionId) ||
           a.selectedOption === undefined ||
           a.selectedOption === null ||
-          !Number.isInteger(a.selectedOption) ||
-          a.selectedOption < 0 ||
-          a.selectedOption > 3
+          String(a.selectedOption).trim() === ''
       );
 
       if (invalidEntry) {
         return res.status(400).json({
-          message: 'Each answer must have a valid questionId and a selectedOption between 0 and 3'
+          message: 'Each answer must have a valid questionId and a non-empty selectedOption string'
         });
       }
 
@@ -194,7 +189,7 @@ export const submitQuiz = async (req, res) => {
         attempted++;
         selectedOptions.push(answer.selectedOption);
 
-        if (answer.selectedOption === qData.correctAnswer) {
+        if (normalize(answer.selectedOption) === normalize(qData.correctAnswer)) {
           correct++;
           score += qData.marks;
         }

@@ -42,15 +42,14 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: 'options must be an array of exactly 4 strings' });
     }
 
-    if (
-      correctAnswer === undefined ||
-      correctAnswer === null ||
-      typeof correctAnswer !== 'number' ||
-      !Number.isInteger(correctAnswer) ||
-      correctAnswer < 0 ||
-      correctAnswer > 3
-    ) {
-      return res.status(400).json({ message: 'correctAnswer must be an integer between 0 and 3' });
+    if (!correctAnswer || typeof correctAnswer !== 'string' || correctAnswer.trim() === '') {
+      return res.status(400).json({ message: 'correctAnswer is required and must be a string' });
+    }
+
+    const normalize = (str) => str.trim().toLowerCase().replace(/\s+/g, ' ');
+    const isValid = options.some((opt) => normalize(String(opt)) === normalize(correctAnswer));
+    if (!isValid) {
+      return res.status(400).json({ message: 'correctAnswer does not match any option' });
     }
 
     // --- Save to DB ---
@@ -58,7 +57,7 @@ export const addQuestion = async (req, res) => {
       roundId,
       questionText: questionText.trim(),
       options,
-      correctAnswer,
+      correctAnswer: correctAnswer.trim(),
       ...(marks !== undefined && { marks })
     });
 
@@ -414,10 +413,16 @@ export const importQuestions = async (req, res) => {
       if (!option3)           rowErrors.push('option3 is required');
       if (!option4)           rowErrors.push('option4 is required');
 
-      const correctAnswer = Number(correctRaw);
-      if (correctRaw === '' || correctRaw === undefined || isNaN(correctAnswer) ||
-          !Number.isInteger(correctAnswer) || correctAnswer < 0 || correctAnswer > 3) {
-        rowErrors.push(`correctAnswer must be an integer 0–3 (got: ${JSON.stringify(correctRaw)})`);
+      const correctAnswer = String(correctRaw ?? '').trim();
+      if (!correctAnswer) {
+        rowErrors.push('correctAnswer is required');
+      } else {
+        const normalize = (str) => str.trim().toLowerCase().replace(/\s+/g, ' ');
+        const options = [option1, option2, option3, option4];
+        const isValid = options.some((opt) => normalize(opt) === normalize(correctAnswer));
+        if (!isValid) {
+          rowErrors.push('correctAnswer does not match any option');
+        }
       }
 
       const marks = marksRaw !== '' && marksRaw !== undefined ? Number(marksRaw) : 1;
@@ -428,10 +433,13 @@ export const importQuestions = async (req, res) => {
       if (rowErrors.length) {
         errors.push({ row: rowNum, errors: rowErrors });
       } else {
+        const options = [option1, option2, option3, option4];
+        options.sort(() => Math.random() - 0.5);
+
         questions.push({
           roundId,
           questionText,
-          options: [option1, option2, option3, option4],
+          options,
           correctAnswer,
           marks,
         });
