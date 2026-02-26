@@ -496,3 +496,58 @@ export const getLiveStats = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
+// GET /api/admin/export-leaderboard/:roundId
+export const exportLeaderboard = async (req, res) => {
+  try {
+    const { roundId } = req.params;
+
+    const round = await Round.findById(roundId).lean();
+    if (!round) {
+      return res.status(404).json({ message: `Round not found: ${roundId}` });
+    }
+
+    const attempts = await StudentAttempt.find(
+      { roundId, terminated: false, isReset: false, submitTime: { $ne: null } },
+      { name: 1, tokenNo: 1, score: 1, correct: 1, attempted: 1, timeTaken: 1, submitTime: 1 }
+    )
+      .sort({ score: -1, timeTaken: 1, submitTime: 1 })
+      .lean();
+
+    if (!attempts.length) {
+      return res.status(404).json({ message: 'No leaderboard data to export for this round.' });
+    }
+
+    const data = attempts.map((a, idx) => ({
+      'Rank':       idx + 1,
+      'Name':       a.name,
+      'Token No':   a.tokenNo,
+      'Score':      a.score,
+      'Correct':    a.correct,
+      'Attempted':  a.attempted,
+      'Time (s)':   a.timeTaken != null ? a.timeTaken : '',
+      'Submit Time': a.submitTime ? new Date(a.submitTime).toLocaleString() : '',
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const colWidths = Object.keys(data[0]).map((key) => ({
+      wch: Math.max(key.length, ...data.map((row) => String(row[key] ?? '').length)) + 2,
+    }));
+    worksheet['!cols'] = colWidths;
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Leaderboard');
+
+    const safeName = round.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    res.setHeader('Content-Disposition', `attachment; filename=leaderboard-${safeName}.xlsx`);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Length', buffer.length);
+
+    return res.status(200).end(buffer);
+  } catch (error) {
+    console.error('exportLeaderboard error:', error);
+    return res.status(500).json({ message: 'Server error while exporting leaderboard' });
+  }
+};

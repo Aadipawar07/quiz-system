@@ -8,6 +8,7 @@ import {
   publishRound,
   getRounds,
   getLeaderboard,
+  exportLeaderboard,
   getParticipants,
   deleteQuestion,
   deleteRound,
@@ -38,7 +39,8 @@ router.get('/rounds',                   adminAuth, getRounds);
 router.post('/import-questions/:roundId', adminAuth, upload.single('file'), importQuestions);
 
 // Leaderboard per round
-router.get('/leaderboard/:roundId',    adminAuth, getLeaderboard);
+router.get('/leaderboard/:roundId',          adminAuth, getLeaderboard);
+router.get('/export-leaderboard/:roundId',   adminAuth, exportLeaderboard);
 
 // Participants per round (all, including terminated)
 router.get('/participants/:roundId',   adminAuth, getParticipants);

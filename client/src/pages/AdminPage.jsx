@@ -548,7 +548,31 @@ function AdminPage() {
             if (!lb?.visible) return null;
             return (
               <div key={r._id} className="leaderboard-panel">
-                <h3 className="leaderboard-title">📊 Leaderboard — {r.name}</h3>
+                <div className="leaderboard-panel-header">
+                  <h3 className="leaderboard-title">📊 Leaderboard — {r.name}</h3>
+                  {!lb.loading && !lb.error && lb.data.length > 0 && (
+                    <button
+                      className="btn-export-lb"
+                      onClick={async () => {
+                        try {
+                          const res = await api.get(`/admin/export-leaderboard/${r._id}`, {
+                            responseType: 'blob',
+                          });
+                          const url = URL.createObjectURL(res.data);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `leaderboard-${r.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.xlsx`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                        } catch {
+                          alert('Export failed. Please try again.');
+                        }
+                      }}
+                    >
+                      ⬇️ Export Excel
+                    </button>
+                  )}
+                </div>
                 {lb.loading && <p className="results-loading">Loading...</p>}
                 {lb.error   && <div className="msg msg-error">{lb.error}</div>}
                 {!lb.loading && !lb.error && lb.data.length === 0 && (
